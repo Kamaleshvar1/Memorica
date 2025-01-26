@@ -30,10 +30,10 @@ conn_str_params = {pair.split('=')[0]: pair.split('=')[1] for pair in conn_str.s
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'memorica-database',
-        'USER': 'vbrlxbwnoo',
-        'PASSWORD': 'KQbQB$kt2o73xXMy',
-        'HOST': 'memorica-server.postgres.database.azure.com',
+        'NAME': 'memorica',
+        'USER': 'memorica',
+        'PASSWORD': 'Shankam123*',
+        'HOST': 'memorica.postgres.database.azure.com',
         'PORT': '5432',
         'OPTIONS': {
             'sslmode': 'require'
