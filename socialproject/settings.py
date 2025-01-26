@@ -109,14 +109,14 @@ WSGI_APPLICATION = 'socialproject.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'memorica-database',
-        'USER': 'vbrktbwnoo',
-        'PASSWORD': 'KQbOB$kt2073xXMy',
-        'HOST': 'memorica-server',
+        'NAME': 'memorica',
+        'USER': 'memorica',
+        'PASSWORD': 'Shankam123*',
+        'HOST': 'memorica.postgres.database.azure.com',
         'PORT': '5432',
-        # 'OPTIONS': {
-        #     'sslmode': 'require'
-        # }
+        'OPTIONS': {
+            'sslmode': 'require'
+        }
     }
 }
 
