@@ -188,3 +188,6 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = 'feed'
+
+SOCIAL_AUTH_GOOGLE_CLIENT_ID = '202264358487-14p906v9pudrqo0gja1a58bgsa2k6fm2.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_SECRET = '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'
