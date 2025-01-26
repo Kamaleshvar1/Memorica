@@ -1,0 +1,113 @@
+{#{% extends 'users/base.html' %}#}
+{#{% block body %}#}
+{#    <h3>Edit Profile Form</h3>#}
+{#    <form method="post" enctype="multipart/form-data">#}
+{#        {% csrf_token %}#}
+{#        {{ user_form.as_p }}#}
+{#        {{ profile_form.as_p }}#}
+{#        <input type="submit" value="Submit">#}
+{#    </form>#}
+{#{% endblock %}#}
+
+{% extends 'users/base.html' %}
+{% block body %}
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div class="sm:mx-auto sm:w-full sm:max-w-md">
+        <h2 class="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Edit Profile
+        </h2>
+    </div>
+
+    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
+        <div class="bg-white py-8 px-4 shadow-lg sm:rounded-lg sm:px-10">
+            <form method="post" enctype="multipart/form-data" class="space-y-6">
+                {% csrf_token %}
+
+                <!-- User Form Fields -->
+                {% for field in user_form %}
+                    <div class="mb-4">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            {{ field.label }}
+                        </label>
+                        <div class="mt-1">
+                            <input
+                                type="{{ field.field.widget.input_type }}"
+                                name="{{ field.name }}"
+                                id="{{ field.id_for_label }}"
+                                class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                value="{{ field.value|default_if_none:'' }}"
+                            >
+                        </div>
+                        {% if field.errors %}
+                            <p class="mt-2 text-sm text-red-600">
+                                {% for error in field.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <!-- Profile Form Fields -->
+                {% for field in profile_form %}
+                    <div class="mb-4">
+                        <label for="{{ field.id_for_label }}" class="block text-sm font-medium text-gray-700">
+                            {{ field.label }}
+                        </label>
+                        <div class="mt-1">
+                            {% if field.field.widget.input_type == 'file' %}
+                                <input
+                                    type="file"
+                                    name="{{ field.name }}"
+                                    id="{{ field.id_for_label }}"
+                                    class="block w-full text-sm text-gray-500
+                                    file:mr-4 file:py-2 file:px-4
+                                    file:rounded-full file:border-0
+                                    file:text-sm file:font-semibold
+                                    file:bg-violet-50 file:text-violet-700
+                                    hover:file:bg-violet-100"
+                                >
+                            {% else %}
+                                <input
+                                    type="{{ field.field.widget.input_type }}"
+                                    name="{{ field.name }}"
+                                    id="{{ field.id_for_label }}"
+                                    class="block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                                    value="{{ field.value|default_if_none:'' }}"
+                                >
+                            {% endif %}
+                        </div>
+                        {% if field.errors %}
+                            <p class="mt-2 text-sm text-red-600">
+                                {% for error in field.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+
+                <div>
+                    <button
+                        type="submit"
+                        class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    >
+                        Update Profile
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+<style>
+    /* Custom styles for form inputs */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="date"],
+    textarea {
+        @apply block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm;
+    }
+</style>

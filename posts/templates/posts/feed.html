@@ -1,0 +1,243 @@
+{% extends 'users/base.html' %}
+{% block body %}
+<div class="container mx-auto px-2 py-2 w-full sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl">
+    {% for post in posts %}
+    <div class="bg-white border border-gray-300 rounded-lg mb-4 w-full">
+        <div class="flex items-center p-3">
+            <img
+                src="{{ post.user.profile.photo.url }}"
+                alt="{{ post.user.username }}"
+                class="w-10 h-10 sm:w-8 sm:h-8 rounded-full mr-3 object-cover"
+            >
+            <div class="flex-grow">
+                <h2 class="text-sm font-semibold text-gray-900">
+                    {{ post.user.username }}
+                </h2>
+            </div>
+            <button class="text-gray-500">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a2 2 0 11-4 0 2 2 0 014 0zm7 0a2 2 0 11-4 0 2 2 0 014 0zm7 0a2 2 0 11-4 0 2 2 0 014 0z" />
+                </svg>
+            </button>
+        </div>
+
+        <div class="aspect-square cursor-pointer" onclick="openModal('{{ post.image.url }}', '{{ post.title }}')">
+            <img
+                src="{{ post.image.url }}"
+                alt="{{ post.title }}"
+                class="w-full h-full object-cover"
+            >
+        </div>
+
+        <div class="p-3">
+            <div class="flex items-center mb-2 space-x-3">
+                <button id="{{ post.id }}" class="text-gray-700 hover:text-red-500 btn-like">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                </button>
+                <button class="text-gray-700 btn-comments">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-lienjoin="round" stroke-width="2" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
+                    </svg>
+                </button>
+                <button
+                    class="text-gray-700 ml-auto btn-share"
+                    data-title="{{ post.title }}"
+                    data-url="{{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 sm:h-6 sm:w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                    </svg>
+                </button>
+            </div>
+
+            <p class="text-sm font-semibold mb-1">
+                {{ post.likes_count }} likes
+            </p>
+
+            <p class="text-sm mb-1">
+                <span class="font-semibold">{{ post.user.username }}</span>
+                {{ post.caption }}
+            </p>
+
+           <p class="text-xs text-gray-500 uppercase" data-created-at="{{ post.created_at|date:'c' }}">
+                {{ post.created_at|timesince }} AGO
+           </p>
+
+            <!-- Comments Section -->
+            <div class="comments-section mt-2 hidden">
+                {% for comment in post.comments.all %}
+                <div class="comment text-sm mb-1">
+                    <span class="font-semibold">{{ comment.posted_by }}</span>
+                    {{ comment.body }}
+                </div>
+                {% endfor %}
+
+                <form method="post" class="mt-2 flex">
+                    {% csrf_token %}
+                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                    <input
+                        type="text"
+                        name="body"
+                        placeholder="Add a comment..."
+                        class="flex-grow px-2 py-1 text-sm border border-gray-300 rounded-l-md focus:outline-none"
+                    >
+                    <button
+                        type="submit"
+                        class="bg-blue-500 text-white px-3 py-1 text-sm rounded-r-md hover:bg-blue-600"
+                    >
+                        Post
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="text-center py-6">
+        <p class="text-gray-600 text-sm">No posts available</p>
+    </div>
+    {% endfor %}
+</div>
+
+<!-- Image Modal -->
+<div id="imageModal" class="hidden fixed inset-0 z-50 bg-black bg-opacity-75 flex items-center justify-center p-4">
+    <div class="relative max-w-full sm:max-w-4xl mx-auto">
+        <button onclick="closeModal()" class="absolute top-2 right-2 sm:top-4 sm:right-4 text-white hover:bg-gray-700 rounded-full p-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+        </button>
+        <img id="modalImage" src="" alt="" class="max-h-screen max-w-full object-contain">
+    </div>
+</div>
+
+<script type="text/javascript">
+    window.CSRF_TOKEN = "{{ csrf_token }}";
+
+    $(document).on('click', '.btn-like', function () {
+        var post_id = this.id;
+        $.ajax({
+            method: "POST",
+            url: '/posts/like/',
+            headers: { "X-CSRFToken": window.CSRF_TOKEN },
+            data: { post_id: post_id },
+            success: function (data) {
+                $('#' + post_id).toggleClass('text-red-500', data.liked);
+                $('#' + post_id).toggleClass('text-gray-700', !data.liked);
+            }
+        });
+    });
+
+    // Toggle comments visibility
+    $(document).on('click', '.btn-comments', function() {
+        $(this).closest('.p-3').find('.comments-section').toggleClass('hidden');
+    });
+
+    // Comment submission
+    $(document).on('submit', '.comments-section form', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        $.ajax({
+            method: "POST",
+            url: "{% url 'feed' %}",
+            headers: { "X-CSRFToken": window.CSRF_TOKEN },
+            data: form.serialize(),
+            success: function(response) {
+                form[0].reset(); // Clear input field
+                location.reload(); // Simplest way to refresh comments
+            }
+        });
+    });
+
+    function openModal(imageUrl, altText) {
+        const modal = document.getElementById('imageModal');
+        const modalImage = document.getElementById('modalImage');
+
+        modalImage.src = imageUrl;
+        modalImage.alt = altText;
+
+        modal.classList.remove('hidden');
+        modal.classList.add('block');
+    }
+
+    function closeModal() {
+        const modal = document.getElementById('imageModal');
+
+        modal.classList.remove('block');
+        modal.classList.add('hidden');
+    }
+
+    // Close modal when clicking outside the image
+    document.getElementById('imageModal').addEventListener('click', function(event) {
+        if (event.target === this) {
+            closeModal();
+        }
+    });
+
+    // Share functionality
+    function sharePost(postTitle, postUrl) {
+        const shareText = encodeURIComponent(`Check out this post: ${postTitle}`);
+        const whatsappShareUrl = `https://api.whatsapp.com/send?text=${shareText} ${encodeURIComponent(postUrl)}`;
+        window.open(whatsappShareUrl, '_blank');
+    }
+
+    // Attach click event to share buttons
+    $(document).on('click', '.btn-share', function() {
+        const postTitle = $(this).data('title');
+        const postUrl = $(this).data('url');
+        sharePost(postTitle, postUrl);
+    });
+
+    // Time since update functions (unchanged from previous implementation)
+    function updateTimeSince() {
+        $('.text-xs.text-gray-500.uppercase').each(function() {
+            const createdAt = $(this).data('created-at');
+            const timeSince = timeDifference(new Date(createdAt));
+            $(this).text(timeSince + ' AGO');
+        });
+    }
+
+    function timeDifference(previous) {
+        const current = new Date();
+        const msPerMinute = 60 * 1000;
+        const msPerHour = msPerMinute * 60;
+        const msPerDay = msPerHour * 24;
+        const msPerMonth = msPerDay * 30;
+        const msPerYear = msPerDay * 365;
+
+        const elapsed = current - previous;
+
+        if (elapsed < msPerMinute) {
+            const seconds = Math.round(elapsed/1000);
+            return seconds + (seconds === 1 ? ' SECOND' : ' SECONDS');
+        }
+        else if (elapsed < msPerHour) {
+            const minutes = Math.round(elapsed/msPerMinute);
+            return minutes + (minutes === 1 ? ' MINUTE' : ' MINUTES');
+        }
+        else if (elapsed < msPerDay) {
+            const hours = Math.round(elapsed/msPerHour);
+            return hours + (hours === 1 ? ' HOUR' : ' HOURS');
+        }
+        else if (elapsed < msPerMonth) {
+            const days = Math.round(elapsed/msPerDay);
+            return days + (days === 1 ? ' DAY' : ' DAYS');
+        }
+        else if (elapsed < msPerYear) {
+            const months = Math.round(elapsed/msPerMonth);
+            return months + (months === 1 ? ' MONTH' : ' MONTHS');
+        }
+        else {
+            const years = Math.round(elapsed/msPerYear);
+            return years + (years === 1 ? ' YEAR' : ' YEARS');
+        }
+    }
+
+    // Update every minute
+    setInterval(updateTimeSince, 60000);
+    $(document).ready(function() {
+        updateTimeSince();
+    });
+</script>
+{% endblock %}
