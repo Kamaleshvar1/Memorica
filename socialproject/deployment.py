@@ -3,9 +3,9 @@ from .settings import *
 from .settings import BASE_DIR
 
 
-SECRET_KEY = os.environ['SECRET']
-ALLOWED_HOSTS = [os.environ['WEBSITE_HOSTNAME']]
-CSRF_TRUSTED_ORIGINS = ['https://' + os.environ['WEBSITE_HOSTNAME']]
+SECRET_KEY = os.getenv('SECRET')
+ALLOWED_HOSTS = [os.getenv('WEBSITE_HOSTNAME', '')]
+CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('WEBSITE_HOSTNAME', '')]
 DEBUG = False
 
 # WhiteNoise configuration
@@ -30,9 +30,13 @@ conn_str_params = {pair.split('=')[0]: pair.split('=')[1] for pair in conn_str.s
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': conn_str_params['dbname'],
-        'HOST': conn_str_params['host'],
-        'USER': conn_str_params['user'],
-        'PASSWORD': conn_str_params['password'],
+        'NAME': os.getenv('AZURE_DBNAME'),
+        'USER': os.getenv('AZURE_DBUSER'),
+        'PASSWORD': os.getenv('AZURE_DBPASSWORD'),
+        'HOST': os.getenv('AZURE_DBHOST'),
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require'
+        }
     }
 }

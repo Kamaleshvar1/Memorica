@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-bs^g4lm8bf&=+d^qb4$x3-(r3$6-v)h-k&8pc&tva@cc9usg2@
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'memorica-bng4gdf5bygjajes.southindia-01.azurewebsites.net', 'memorica.social']
 
 # Application definition
 
