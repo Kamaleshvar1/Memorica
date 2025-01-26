@@ -5,7 +5,7 @@ from .settings import BASE_DIR
 
 SECRET_KEY = os.getenv('SECRET')
 ALLOWED_HOSTS = [os.getenv('WEBSITE_HOSTNAME', '')]
-CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('WEBSITE_HOSTNAME', '')]
+CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('WEBSITE_HOSTNAME', 'https://memorica-bng4gdf5bygjajes.southindia-01.azurewebsites.net')]
 DEBUG = False
 
 # WhiteNoise configuration
@@ -23,6 +23,7 @@ MIDDLEWARE = [
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 
 
 conn_str = os.environ['AZURE_POSTGRESQL_CONNECTIONSTRING']
