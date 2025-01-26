@@ -31,8 +31,8 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'memorica-database',
-        'USER': 'vbrktbwnoo',
-        'PASSWORD': 'KQbOB$kt2073xXMy',
+        'USER': 'vbrlxbwnoo',
+        'PASSWORD': 'KQbQB$kt2o73xXMy',
         'HOST': 'memorica-server',
         'PORT': '5432',
         'OPTIONS': {
