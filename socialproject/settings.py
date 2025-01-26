@@ -114,9 +114,9 @@ DATABASES = {
         'PASSWORD': 'KQbOB$kt2073xXMy',
         'HOST': 'memorica-server',
         'PORT': '5432',
-        'OPTIONS': {
-            'sslmode': 'require'
-        }
+        # 'OPTIONS': {
+        #     'sslmode': 'require'
+        # }
     }
 }
 

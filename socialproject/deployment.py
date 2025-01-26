@@ -33,7 +33,7 @@ DATABASES = {
         'NAME': 'memorica-database',
         'USER': 'vbrlxbwnoo',
         'PASSWORD': 'KQbQB$kt2o73xXMy',
-        'HOST': 'memorica-server',
+        'HOST': 'memorica-server.postgres.database.azure.com',
         'PORT': '5432',
         'OPTIONS': {
             'sslmode': 'require'
