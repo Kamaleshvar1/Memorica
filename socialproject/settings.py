@@ -57,7 +57,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-SITE_ID = 1
+SITE_ID = 3
 
 ACCOUNT_EMAIL_VERIFICATION = 'none'
 
@@ -66,6 +66,9 @@ SOCIALACCOUNT_PROVIDERS = {
         'SCOPE': ['profile', 'email'],
         'AUTH_PARAMS': {'access_type': 'online', 'prompt': 'select_account'},
         'OAUTH_PKCE_ENABLED': True,
+        'SITE': {
+            'id': SITE_ID,
+        }
     }
 }
 
