@@ -94,10 +94,7 @@ TEMPLATES = [
     },
 ]
 
-AUTHENTICATION_BACKENDS = [
-    'path.to.custom.GoogleAuthBackend',
-    'django.contrib.auth.backends.ModelBackend',
-]
+
 
 
 # ACCOUNT_TEMPLATES = {
@@ -110,13 +107,16 @@ WSGI_APPLICATION = 'socialproject.wsgi.application'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
 DATABASES = {
-     'default': {
+    'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'memorica',       # Database name
-        'USER': 'memorica',        # PostgreSQL username
-        'PASSWORD': 'memorica69*',  # Your PostgreSQL password
-        'HOST': 'localhost',        # Usually localhost
-        'PORT': '5432',             # Default PostgreSQL port
+        'NAME': 'memorica-database',
+        'USER': 'vbrktbwnoo',
+        'PASSWORD': 'KQbOB$kt2073xXMy',
+        'HOST': 'memorica-server',
+        'PORT': '5432',
+        'OPTIONS': {
+            'sslmode': 'require'
+        }
     }
 }
 
