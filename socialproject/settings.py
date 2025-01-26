@@ -31,6 +31,7 @@ DEBUG = True
 ALLOWED_HOSTS = ['127.0.0.1', 'memorica-bng4gdf5bygjajes.southindia-01.azurewebsites.net', 'memorica.social']
 CSRF_TRUSTED_ORIGINS = [
     'https://memorica-bng4gdf5bygjajes.southindia-01.azurewebsites.net',
+    'https://memorica.social',
 ]
 
 

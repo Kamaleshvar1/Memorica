@@ -5,7 +5,7 @@ from .settings import BASE_DIR
 
 SECRET_KEY = os.getenv('SECRET')
 ALLOWED_HOSTS = [os.getenv('WEBSITE_HOSTNAME', '')]
-CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('WEBSITE_HOSTNAME', 'https://memorica-bng4gdf5bygjajes.southindia-01.azurewebsites.net')]
+CSRF_TRUSTED_ORIGINS = ['https://' + os.getenv('WEBSITE_HOSTNAME', 'https://memorica.social')]
 DEBUG = False
 
 # WhiteNoise configuration
