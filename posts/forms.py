@@ -3,6 +3,9 @@ from django import forms
 
 
 class PostCreateForm(forms.ModelForm):
+    title = forms.CharField(required=True)
+    image = forms.ImageField(required=True)
+    caption = forms.CharField(required=False, widget=forms.Textarea)
     class Meta:
         model = Post
         fields = ['title', 'image', 'caption']
