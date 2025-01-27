@@ -186,6 +186,8 @@ AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
 AZURE_STATIC_CONTAINER = 'static'
 AZURE_MEDIA_CONTAINER = 'media'
 AZURE_SSL = True
+AZURE_ACCOUNT_KEY = "NBHeHbN0l0E7XUfUvUM7+J4XGvD+CZLX0Jp1NJtFFNmbazW8lRmYd6dUvravX3ICh1KPdCcT3fdZ+ASthujjWQ=="
+
 
 # STORAGE BACKEND SETTINGS
 # ------------------------------------------------------------------------------
