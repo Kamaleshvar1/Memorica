@@ -13,7 +13,6 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-from storages.backends.azure_storage import AzureStorage
 
 # CORE SETTINGS
 # ------------------------------------------------------------------------------
@@ -195,8 +194,8 @@ STATICFILES_STORAGE = 'socialproject.storage_backends.AzureStaticStorage'
 
 # URLs
 # ------------------------------------------------------------------------------
-MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/media/'
-STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/static/'
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{AZURE_MEDIA_CONTAINER}/'
+STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{AZURE_STATIC_CONTAINER}/'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'feed'
