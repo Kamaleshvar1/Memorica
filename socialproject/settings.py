@@ -182,19 +182,20 @@ DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 # AZURE STORAGE SETTINGS
 # ------------------------------------------------------------------------------
 AZURE_ACCOUNT_NAME = os.getenv('AZURE_ACCOUNT_NAME', 'memoricastorage')
-AZURE_ACCOUNT_KEY = "puI4BecbCO1LOHcsR44wO4L9KmGL9kzJOGe8DcMq7BPNmgCI2M0w/k52Iz7xn13eO26Pr2u7ZQhL+AStXjKD4Q=="
+AZURE_ACCOUNT_KEY = "NBHeHbN0l0E7XUfUvUM7+J4XGvD+CZLX0Jp1NJtFFNmbazW8lRmYd6dUvravX3ICh1KPdCcT3fdZ+ASthujjWQ=="
 AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
-AZURE_CONTAINER = os.getenv('AZURE_CONTAINER', 'media')
+AZURE_STATIC_CONTAINER = 'static'
+AZURE_MEDIA_CONTAINER = 'media'
 AZURE_SSL = True
 
 # STORAGE BACKEND SETTINGS
 # ------------------------------------------------------------------------------
-DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
-STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+DEFAULT_FILE_STORAGE = 'socialproject.storage_backends.AzureMediaStorage'
+STATICFILES_STORAGE = 'socialproject.storage_backends.AzureStaticStorage'
 
 # URLs
 # ------------------------------------------------------------------------------
-MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{AZURE_CONTAINER}/'
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/media/'
 STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/static/'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'logout'
