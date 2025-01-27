@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
+from storages.backends.azure_storage import AzureStorage
 
 # Load environment variables
 load_dotenv()
@@ -196,7 +197,13 @@ LOGIN_REDIRECT_URL = 'feed'
 SOCIAL_AUTH_GOOGLE_CLIENT_ID = '202264358487-14p906v9pudrqo0gja1a58bgsa2k6fm2.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_SECRET = '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'
 
-DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
+class AzureMediaStorage(AzureStorage):
+    account_name = "memoricastorage"
+    account_key = "puI4BecbCO1LOHcsR44wO4L9KmGL9kzJOGe8DcMq7BPNmgCI2M0w/k52Iz7xn13eO26Pr2u7ZQhL+AStXjKD4Q=="
+    azure_container = "media"
+    expiration_secs = None  # Public access to media files
+
+DEFAULT_FILE_STORAGE = "users.storage_backends.AzureMediaStorage"
 AZURE_ACCOUNT_NAME = "memoricastorage"
 AZURE_ACCOUNT_KEY = "puI4BecbCO1LOHcsR44wO4L9KmGL9kzJOGe8DcMq7BPNmgCI2M0w/k52Iz7xn13eO26Pr2u7ZQhL+AStXjKD4Q=="
 AZURE_CONTAINER = "media"
