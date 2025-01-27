@@ -14,11 +14,11 @@
                     {{ post.user.username }}
                 </h2>
             </div>
-            <button class="text-gray-500">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a2 2 0 11-4 0 2 2 0 014 0zm7 0a2 2 0 11-4 0 2 2 0 014 0zm7 0a2 2 0 11-4 0 2 2 0 014 0z" />
-                </svg>
-            </button>
+{#            <button class="text-gray-500">#}
+{#                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 sm:h-5 sm:w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">#}
+{#                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h.01M12 12h.01M19 12h.01M6 12a2 2 0 11-4 0 2 2 0 014 0zm7 0a2 2 0 11-4 0 2 2 0 014 0zm7 0a2 2 0 11-4 0 2 2 0 014 0z" />#}
+{#                </svg>#}
+{#            </button>#}
         </div>
 
         <div class="aspect-square cursor-pointer" onclick="openModal('{{ post.image.url }}', '{{ post.title }}')">
@@ -42,7 +42,7 @@
                     </svg>
                 </button>
                 <button
-                    class="text-gray-700 ml-auto btn-share"
+                    class="text-gray-700 ml-auto btn-share rotate-90"
                     data-title="{{ post.title }}"
                     data-url="{{ request.scheme }}://{{ request.get_host }}{{ post.get_absolute_url }}"
                 >
@@ -50,6 +50,7 @@
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                     </svg>
                 </button>
+
             </div>
 
             <p class="text-sm font-semibold mb-1">
@@ -61,8 +62,8 @@
                 {{ post.caption }}
             </p>
 
-           <p class="text-xs text-gray-500 uppercase" data-created-at="{{ post.created_at|date:'c' }}">
-                {{ post.created_at|timesince }} AGO
+            <p class="text-xs text-gray-500 uppercase" data-created-at="{{ post.created|date:'c' }}">
+                {{ post.created |timesince }} AGO
            </p>
 
             <!-- Comments Section -->
@@ -116,18 +117,26 @@
     window.CSRF_TOKEN = "{{ csrf_token }}";
 
     $(document).on('click', '.btn-like', function () {
-        var post_id = this.id;
-        $.ajax({
-            method: "POST",
-            url: '/posts/like/',
-            headers: { "X-CSRFToken": window.CSRF_TOKEN },
-            data: { post_id: post_id },
-            success: function (data) {
-                $('#' + post_id).toggleClass('text-red-500', data.liked);
-                $('#' + post_id).toggleClass('text-gray-700', !data.liked);
+    var post_id = this.id;
+    var likeButton = $('#' + post_id);
+    var likeCountElem = likeButton.closest('.p-3').find('.text-sm.font-semibold');
+
+    $.ajax({
+        method: "POST",
+        url: '/posts/like/',
+        headers: { "X-CSRFToken": window.CSRF_TOKEN },
+        data: { post_id: post_id },
+        success: function (data) {
+            if (data.liked) {
+                likeButton.addClass('text-red-500').removeClass('text-gray-700');
+            } else {
+                likeButton.removeClass('text-red-500').addClass('text-gray-700');
             }
-        });
+            likeCountElem.text(`${data.likes_count} likes`); // Update like count dynamically
+        }
     });
+});
+
 
     // Toggle comments visibility
     $(document).on('click', '.btn-comments', function() {
@@ -191,51 +200,69 @@
 
     // Time since update functions (unchanged from previous implementation)
     function updateTimeSince() {
-        $('.text-xs.text-gray-500.uppercase').each(function() {
-            const createdAt = $(this).data('created-at');
-            const timeSince = timeDifference(new Date(createdAt));
-            $(this).text(timeSince + ' AGO');
-        });
+    $('.text-xs.text-gray-500.uppercase').each(function() {
+        const createdAtString = $(this).data('created-at');
+
+        if (!createdAtString) {
+            console.error("No date found");
+            return;
+        }
+
+        const createdAt = new Date(createdAtString);
+
+        if (isNaN(createdAt.getTime())) {
+            console.error("Invalid date:", createdAtString);
+            return;
+        }
+
+        const timeSince = timeDifference(createdAt);
+        $(this).text(timeSince + ' AGO');
+    });
+}
+
+function timeDifference(previous) {
+    const current = new Date();
+    const msPerMinute = 60 * 1000;
+    const msPerHour = msPerMinute * 60;
+    const msPerDay = msPerHour * 24;
+    const msPerMonth = msPerDay * 30;
+    const msPerYear = msPerDay * 365;
+
+    const elapsed = current - previous;
+
+    if (elapsed < msPerMinute) {
+        const seconds = Math.round(elapsed/1000);
+        return seconds + (seconds === 1 ? ' SECOND' : ' SECONDS');
     }
-
-    function timeDifference(previous) {
-        const current = new Date();
-        const msPerMinute = 60 * 1000;
-        const msPerHour = msPerMinute * 60;
-        const msPerDay = msPerHour * 24;
-        const msPerMonth = msPerDay * 30;
-        const msPerYear = msPerDay * 365;
-
-        const elapsed = current - previous;
-
-        if (elapsed < msPerMinute) {
-            const seconds = Math.round(elapsed/1000);
-            return seconds + (seconds === 1 ? ' SECOND' : ' SECONDS');
-        }
-        else if (elapsed < msPerHour) {
-            const minutes = Math.round(elapsed/msPerMinute);
-            return minutes + (minutes === 1 ? ' MINUTE' : ' MINUTES');
-        }
-        else if (elapsed < msPerDay) {
-            const hours = Math.round(elapsed/msPerHour);
-            return hours + (hours === 1 ? ' HOUR' : ' HOURS');
-        }
-        else if (elapsed < msPerMonth) {
-            const days = Math.round(elapsed/msPerDay);
-            return days + (days === 1 ? ' DAY' : ' DAYS');
-        }
-        else if (elapsed < msPerYear) {
-            const months = Math.round(elapsed/msPerMonth);
-            return months + (months === 1 ? ' MONTH' : ' MONTHS');
-        }
-        else {
-            const years = Math.round(elapsed/msPerYear);
-            return years + (years === 1 ? ' YEAR' : ' YEARS');
-        }
+    else if (elapsed < msPerHour) {
+        const minutes = Math.round(elapsed/msPerMinute);
+        return minutes + (minutes === 1 ? ' MINUTE' : ' MINUTES');
     }
+    else if (elapsed < msPerDay) {
+        const hours = Math.round(elapsed/msPerHour);
+        return hours + (hours === 1 ? ' HOUR' : ' HOURS');
+    }
+    else if (elapsed < msPerMonth) {
+        const days = Math.round(elapsed/msPerDay);
+        return days + (days === 1 ? ' DAY' : ' DAYS');
+    }
+    else if (elapsed < msPerYear) {
+        const months = Math.round(elapsed/msPerMonth);
+        return months + (months === 1 ? ' MONTH' : ' MONTHS');
+    }
+    else {
+        const years = Math.round(elapsed/msPerYear);
+        return years + (years === 1 ? ' YEAR' : ' YEARS');
+    }
+}
 
-    // Update every minute
-    setInterval(updateTimeSince, 60000);
+// Update times when page loads
+$(document).ready(function() {
+    updateTimeSince();
+});
+
+// Update times every minute
+setInterval(updateTimeSince, 60000);
     $(document).ready(function() {
         updateTimeSince();
     });
