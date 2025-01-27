@@ -19,6 +19,8 @@ def user_login(request):
             user = authenticate(request, username=data['username'], password=data['password'])
             if user is not None:
                 login(request, user)
+                if not user.profile.is_profile_completed:
+                    return redirect('edit')
                 return redirect('feed')
             else:
                 form.add_error(None, 'Invalid username or password')
@@ -55,14 +57,11 @@ def register(request):
             # Check if the user already has a profile before creating
             profile, created = Profile.objects.get_or_create(user=new_user)
 
-            if created:
-                # Profile was created
-                print("Profile created for the user.")
-            else:
-                # Profile already exists
-                print("Profile already exists for the user.")
+            login(request, new_user)
 
-            return render(request, 'users/register_done.html', {'new_user': new_user})
+            return redirect('edit')
+
+            #return render(request, 'users/register_done.html', {'new_user': new_user})
     else:
         user_form = UserRegistrationForm()
 
@@ -80,8 +79,11 @@ def edit(request):
         profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
+            profile = profile_form.save(commit=False)
+            profile.is_profile_completed = True
             profile_form.save()
-            return redirect('edit')  # Redirect to avoid resubmission
+            messages.success(request, 'Profile updated successfully')
+            return redirect('feed')  # Redirect to avoid resubmission
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)

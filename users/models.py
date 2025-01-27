@@ -10,9 +10,15 @@ class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     date_of_birth = models.DateField(blank=True, null=True)
     photo = models.ImageField(upload_to='users/%Y/%m/%d', blank=True)
+    is_profile_completed = models.BooleanField(default=False)
 
     def __str__(self):
         return self.user.username
+
+    def get_photo_url(self):
+        if self.photo and hasattr(self.photo, 'url'):
+            return self.photo.url
+        return '/static/images/default-avatar.png'  # Default avatar path
 
 
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
