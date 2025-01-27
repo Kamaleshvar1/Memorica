@@ -189,7 +189,7 @@ AZURE_SSL = True
 
 # STORAGE BACKEND SETTINGS
 # ------------------------------------------------------------------------------
-DEFAULT_FILE_STORAGE = 'users.storage_backends.AzureMediaStorage'
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
 
 # URLs
