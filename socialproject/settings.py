@@ -166,7 +166,7 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
+#STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
@@ -188,10 +188,19 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 LOGIN_REDIRECT_URL = 'feed'
 
 SOCIAL_AUTH_GOOGLE_CLIENT_ID = '202264358487-14p906v9pudrqo0gja1a58bgsa2k6fm2.apps.googleusercontent.com'
 SOCIAL_AUTH_GOOGLE_SECRET = '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'
+
+DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
+AZURE_ACCOUNT_NAME = "memoricastorage"
+AZURE_ACCOUNT_KEY = "puI4BecbCO1LOHcsR44wO4L9KmGL9kzJOGe8DcMq7BPNmgCI2M0w/k52Iz7xn13eO26Pr2u7ZQhL+AStXjKD4Q=="
+AZURE_CONTAINER = "media"
+
+# Update media and static URLs
+MEDIA_URL = f"https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/"
+STATIC_URL = "https://memoricastorage.blob.core.windows.net/static/"
