@@ -14,8 +14,20 @@ class ProfileEditForm(forms.ModelForm):
         model = Profile
         fields = ('date_of_birth', 'photo',)
         widgets = {
-            'date_of_birth': forms.DateInput(attrs={'type': 'date'})
+            'date_of_birth': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm'
+                },
+                format='%Y-%m-%d'
+            )
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.date_of_birth:
+            self.initial['date_of_birth'] = self.instance.date_of_birth.strftime('%Y-%m-%d')
+
 
 class LoginForm(forms.Form):
     username = forms.CharField()

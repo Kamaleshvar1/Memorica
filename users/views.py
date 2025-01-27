@@ -60,11 +60,16 @@ def register(request):
             # Check if the user already has a profile before creating
             profile, created = Profile.objects.get_or_create(user=new_user)
 
-            login(request, new_user)
+            authenticated_user = authenticate(
+                request,
+                username=user_form.cleaned_data['username'],
+                password=user_form.cleaned_data['password']
+            )
+            if authenticated_user:
+                login(request, authenticated_user, backend='django.contrib.auth.backends.ModelBackend')
 
             return redirect('edit')
 
-            #return render(request, 'users/register_done.html', {'new_user': new_user})
     else:
         user_form = UserRegistrationForm()
 
@@ -73,29 +78,35 @@ def register(request):
 
 @login_required
 def edit(request):
-    # Ensure the user has an associated Profile object
     if not hasattr(request.user, 'profile'):
         Profile.objects.create(user=request.user)
 
     if request.method == 'POST':
+        print("POST data:", request.POST)  # Debug print
         user_form = UserEditForm(instance=request.user, data=request.POST)
-        profile_form = ProfileEditForm(instance=request.user.profile, data=request.POST, files=request.FILES)
+        profile_form = ProfileEditForm(
+            instance=request.user.profile,
+            data=request.POST,
+            files=request.FILES
+        )
         if user_form.is_valid() and profile_form.is_valid():
+            print("Profile form cleaned data:", profile_form.cleaned_data)  # Debug print
             user_form.save()
             profile = profile_form.save(commit=False)
+            if 'date_of_birth' in profile_form.cleaned_data:
+                print("Saving date:", profile_form.cleaned_data['date_of_birth'])  # Debug print
+                profile.date_of_birth = profile_form.cleaned_data['date_of_birth']
             profile.is_profile_completed = True
-            profile_form.save()
+            profile.save()
             messages.success(request, 'Profile updated successfully')
-            return redirect('feed')  # Redirect to avoid resubmission
+            return redirect('feed')
     else:
         user_form = UserEditForm(instance=request.user)
         profile_form = ProfileEditForm(instance=request.user.profile)
+        print("Initial date:", request.user.profile.date_of_birth)  # Debug print
+        print("Form initial:", profile_form.initial.get('date_of_birth'))  # Debug print
 
-    return render(request, 'users/edit.html', {'user_form': user_form, 'profile_form': profile_form})
-
-
-
-from django.http import HttpResponse
-
-# def test_login(request):
-#     return render(request, "socialaccount/login.html")
+    return render(request, 'users/edit.html', {
+        'user_form': user_form,
+        'profile_form': profile_form
+    })
