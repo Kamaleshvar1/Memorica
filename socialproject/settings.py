@@ -15,29 +15,35 @@ import os
 from dotenv import load_dotenv
 from storages.backends.azure_storage import AzureStorage
 
+# CORE SETTINGS
+# ------------------------------------------------------------------------------
 # Load environment variables
 load_dotenv()
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
-
+# SECURITY SETTINGS
+# ------------------------------------------------------------------------------
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-bs^g4lm8bf&=+d^qb4$x3-(r3$6-v)h-k&8pc&tva@cc9usg2@'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
+# SITE SETTINGS
+# ------------------------------------------------------------------------------
 ALLOWED_HOSTS = ['127.0.0.1', 'memorica-bng4gdf5bygjajes.southindia-01.azurewebsites.net', 'memorica.social']
 CSRF_TRUSTED_ORIGINS = [
     'https://memorica-bng4gdf5bygjajes.southindia-01.azurewebsites.net',
     'https://memorica.social',
 ]
 
+ROOT_URLCONF = 'socialproject.urls'
+WSGI_APPLICATION = 'socialproject.wsgi.application'
 
-# Application definition
-
+# APPLICATION DEFINITION
+# ------------------------------------------------------------------------------
 INSTALLED_APPS = [
     'users',
     'posts',
@@ -54,26 +60,6 @@ INSTALLED_APPS = [
     'allauth.socialaccount.providers.google',
 ]
 
-AUTHENTICATION_BACKENDS = [
-    'django.contrib.auth.backends.ModelBackend',
-    'allauth.account.auth_backends.AuthenticationBackend',
-]
-
-SITE_ID = 3
-
-ACCOUNT_EMAIL_VERIFICATION = 'none'
-
-SOCIALACCOUNT_PROVIDERS = {
-    'google': {
-        'SCOPE': ['profile', 'email'],
-        'AUTH_PARAMS': {'access_type': 'online', 'prompt': 'select_account'},
-        'OAUTH_PKCE_ENABLED': True,
-        'SITE': {
-            'id': SITE_ID,
-        }
-    }
-}
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
@@ -86,8 +72,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'socialproject.urls'
-
+# TEMPLATES CONFIGURATION
+# ------------------------------------------------------------------------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -104,18 +90,8 @@ TEMPLATES = [
     },
 ]
 
-
-
-
-# ACCOUNT_TEMPLATES = {
-#     'login': 'users/templates/socialaccount/login.html',
-# }
-
-WSGI_APPLICATION = 'socialproject.wsgi.application'
-
-# Database
-# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
-
+# DATABASE SETTINGS
+# ------------------------------------------------------------------------------
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
@@ -130,8 +106,12 @@ DATABASES = {
     }
 }
 
-# Password validation
-# https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
+# AUTHENTICATION SETTINGS
+# ------------------------------------------------------------------------------
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -148,39 +128,49 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-# Internationalization
-# https://docs.djangoproject.com/en/4.2/topics/i18n/
+# SOCIAL AUTH SETTINGS
+# ------------------------------------------------------------------------------
+SITE_ID = 3
+ACCOUNT_EMAIL_VERIFICATION = 'none'
 
-LANGUAGE_CODE = 'en-us'
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': ['profile', 'email'],
+        'AUTH_PARAMS': {'access_type': 'online', 'prompt': 'select_account'},
+        'OAUTH_PKCE_ENABLED': True,
+        'SITE': {
+            'id': SITE_ID,
+        }
+    }
+}
 
-TIME_ZONE = 'UTC'
+SOCIAL_AUTH_GOOGLE_CLIENT_ID = '202264358487-14p906v9pudrqo0gja1a58bgsa2k6fm2.apps.googleusercontent.com'
+SOCIAL_AUTH_GOOGLE_SECRET = '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'
 
-USE_I18N = True
-
-USE_TZ = True
-
-# Add these settings to maintain login state
+# SESSION SETTINGS
+# ------------------------------------------------------------------------------
 SESSION_COOKIE_AGE = 86400  # 24 hours in seconds
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = False
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.2/howto/static-files/
+# INTERNATIONALIZATION
+# ------------------------------------------------------------------------------
+LANGUAGE_CODE = 'en-us'
+TIME_ZONE = 'UTC'
+USE_I18N = True
+USE_TZ = True
 
-#STATIC_URL = '/static/'
+# STATIC FILES SETTINGS
+# ------------------------------------------------------------------------------
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
+# MEDIA FILES SETTINGS
+# ------------------------------------------------------------------------------
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-LOGIN_URL = 'login'
-LOGOUT_REDIRECT_URL = 'logout'
-
+# EMAIL SETTINGS
+# ------------------------------------------------------------------------------
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
@@ -189,25 +179,27 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
-# MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+# AZURE STORAGE SETTINGS
+# ------------------------------------------------------------------------------
+AZURE_ACCOUNT_NAME = os.getenv('AZURE_ACCOUNT_NAME', 'memoricastorage')
+AZURE_ACCOUNT_KEY = "puI4BecbCO1LOHcsR44wO4L9KmGL9kzJOGe8DcMq7BPNmgCI2M0w/k52Iz7xn13eO26Pr2u7ZQhL+AStXjKD4Q=="
+AZURE_CUSTOM_DOMAIN = f'{AZURE_ACCOUNT_NAME}.blob.core.windows.net'
+AZURE_CONTAINER = os.getenv('AZURE_CONTAINER', 'media')
+AZURE_SSL = True
 
+# STORAGE BACKEND SETTINGS
+# ------------------------------------------------------------------------------
+DEFAULT_FILE_STORAGE = 'users.storage_backends.AzureMediaStorage'
+STATICFILES_STORAGE = 'storages.backends.azure_storage.AzureStorage'
+
+# URLs
+# ------------------------------------------------------------------------------
+MEDIA_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{AZURE_CONTAINER}/'
+STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/static/'
+LOGIN_URL = 'login'
+LOGOUT_REDIRECT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'feed'
 
-SOCIAL_AUTH_GOOGLE_CLIENT_ID = '202264358487-14p906v9pudrqo0gja1a58bgsa2k6fm2.apps.googleusercontent.com'
-SOCIAL_AUTH_GOOGLE_SECRET = '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'
-
-class AzureMediaStorage(AzureStorage):
-    account_name = "memoricastorage"
-    account_key = "puI4BecbCO1LOHcsR44wO4L9KmGL9kzJOGe8DcMq7BPNmgCI2M0w/k52Iz7xn13eO26Pr2u7ZQhL+AStXjKD4Q=="
-    azure_container = "media"
-    expiration_secs = None  # Public access to media files
-
-DEFAULT_FILE_STORAGE = "users.storage_backends.AzureMediaStorage"
-AZURE_ACCOUNT_NAME = "memoricastorage"
-AZURE_ACCOUNT_KEY = "puI4BecbCO1LOHcsR44wO4L9KmGL9kzJOGe8DcMq7BPNmgCI2M0w/k52Iz7xn13eO26Pr2u7ZQhL+AStXjKD4Q=="
-AZURE_CONTAINER = "media"
-
-# Update media and static URLs
-MEDIA_URL = f"https://{AZURE_ACCOUNT_NAME}.blob.core.windows.net/{AZURE_CONTAINER}/"
-STATIC_URL = "https://memoricastorage.blob.core.windows.net/static/"
+# MISC SETTINGS
+# ------------------------------------------------------------------------------
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
