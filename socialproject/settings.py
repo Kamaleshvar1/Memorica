@@ -191,11 +191,8 @@ AZURE_ACCOUNT_KEY = "NBHeHbN0l0E7XUfUvUM7+J4XGvD+CZLX0Jp1NJtFFNmbazW8lRmYd6dUvra
 
 # STORAGE BACKEND SETTINGS
 # ------------------------------------------------------------------------------
-# DEFAULT_FILE_STORAGE = 'socialproject.storage_backends.AzureMediaStorage'
-# STATICFILES_STORAGE = 'socialproject.storage_backends.AzureStaticStorage'
-
-DEFAULT_FILE_STORAGE = "storages.backends.azure_storage.AzureStorage"
-STATICFILES_STORAGE = "storages.backends.azure_storage.AzureStorage"
+DEFAULT_FILE_STORAGE = 'socialproject.storage_backends.AzureMediaStorage'
+STATICFILES_STORAGE = 'socialproject.storage_backends.AzureStaticStorage'
 
 
 # URLs
