@@ -41,12 +41,14 @@ CSRF_TRUSTED_ORIGINS = [
 ROOT_URLCONF = 'socialproject.urls'
 WSGI_APPLICATION = 'socialproject.wsgi.application'
 
+
+
 # APPLICATION DEFINITION
 # ------------------------------------------------------------------------------
 INSTALLED_APPS = [
+    'django.contrib.admin',
     'users',
     'posts',
-    'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
@@ -188,12 +190,10 @@ AZURE_MEDIA_CONTAINER = 'media'
 AZURE_SSL = True
 AZURE_ACCOUNT_KEY = "NBHeHbN0l0E7XUfUvUM7+J4XGvD+CZLX0Jp1NJtFFNmbazW8lRmYd6dUvravX3ICh1KPdCcT3fdZ+ASthujjWQ=="
 
-
 # STORAGE BACKEND SETTINGS
 # ------------------------------------------------------------------------------
 DEFAULT_FILE_STORAGE = 'socialproject.storage_backends.AzureMediaStorage'
 STATICFILES_STORAGE = 'socialproject.storage_backends.AzureStaticStorage'
-
 
 # URLs
 # ------------------------------------------------------------------------------
@@ -202,6 +202,9 @@ STATIC_URL = f'https://{AZURE_CUSTOM_DOMAIN}/{AZURE_STATIC_CONTAINER}/'
 LOGIN_URL = 'login'
 LOGOUT_REDIRECT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'feed'
+
+ADMIN_MEDIA_PREFIX = STATIC_URL + 'admin/'
+
 
 # MISC SETTINGS
 # ------------------------------------------------------------------------------

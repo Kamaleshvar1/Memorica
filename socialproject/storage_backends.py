@@ -9,6 +9,9 @@ class AzureStaticStorage(AzureStorage):
     expiration_secs = None
     file_overwrite = True
 
+    def get_valid_name(self, name):
+        return name
+
 
 class AzureMediaStorage(AzureStorage):
     account_name = settings.AZURE_ACCOUNT_NAME
