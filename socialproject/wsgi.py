@@ -1,18 +1,10 @@
-"""
-WSGI config for socialproject project.
-
-It exposes the WSGI callable as a module-level variable named ``application``.
-
-For more information on this file, see
-https://docs.djangoproject.com/en/4.2/howto/deployment/wsgi/
-"""
-
 import os
 
 from django.core.wsgi import get_wsgi_application
 
-settings_module = "socialproject.settings" if "WEBSITE_HOSTNAME" in os.environ else "socialproject.settings"
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'socialproject.settings')
+# Use deployment settings if WEBSITE_HOSTNAME exists (production environment)
+# Otherwise use default settings
+settings_module = "socialproject.deployment" if "WEBSITE_HOSTNAME" in os.environ else "socialproject.settings"
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', settings_module)
 
 application = get_wsgi_application()
